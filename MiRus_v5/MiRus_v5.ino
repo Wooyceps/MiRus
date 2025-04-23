@@ -1,53 +1,56 @@
 #include <Adafruit_NeoPixel.h>
 #include "EncoderClass.h"
-#include <PID_v1.h>
 #include "CytronMotorDriver.h"
 
 #ifdef __AVR__
  #include <avr/power.h>
 #endif
 
-#define NUMPIXELS 29 
+// Pins and pixels
+#define NUMPIXELS 29 // Number of pixels
+#define pinLED  8    // DO
+#define trigPin 12   // DO
+#define echoPin 13   // DO
+#define M1A     5    // PWM
+#define M1B     6    // PWM
+#define M2A     10   // PWM
+#define M2B     11   // PWM
+#define E1A     2    // Interrupt 1
+#define E1B     4    // DI
+#define E2A     3    // Inerrupt 2
+#define E2B     7    // DI
 
-#define pinLED  8 // DO
-#define trigPin 12 // DO
-#define echoPin 13 // DO
-#define M1A     5 // PWM
-#define M1B     6 // PWM
-#define M2A     10 // PWM
-#define M2B     11 // PWM
-#define E1A     2 // Interrupt 1
-#define E1B     4 // DI
-#define E2A     3 // Inerrupt 2
-#define E2B     7 // DI
-
+// NeoPiel object
 Adafruit_NeoPixel pixels(NUMPIXELS, pinLED, NEO_GRB + NEO_KHZ800);
-float duration, distance, dist;
 
-// Zmienne PID
-double speed1, speed2;
-double Kp = .15, Ki = 0.1, Kd = 0.002;
-int lastMode = -1;
-
-long prevT = 0;
-long prevPos[2];
-
-float last_error1 = 0, error1 = 0, changeError1 = 0, totalError1 = 0, pidTerm1 = 0, pidTerm_scaled1 = 0;
-float last_error2 = 0, error2 = 0, changeError2 = 0, totalError2 = 0, pidTerm2 = 0, pidTerm_scaled2 = 0;
-
-// Definiowanie siników DC
+// DC motor objects
 CytronMD motor1(PWM_PWM, M1A, M1B);
 CytronMD motor2(PWM_PWM, M2A, M2B);
 
-// Definiowanie enkoderów 
+// Encoders object 
 EncodersClass encoders(E1A,E1B,E2A,E2B);
+
+// HC-SR04 data
+float duration, distance, dist;
+
+// PID variables
+double speed1, speed2;
+double Kp = .15, Ki = 0.1, Kd = 0.002;
+long prevT = 0;
+long prevPos[2];
+float last_error1 = 0, error1 = 0, changeError1 = 0, totalError1 = 0, pidTerm1 = 0, pidTerm_scaled1 = 0;
+float last_error2 = 0, error2 = 0, changeError2 = 0, totalError2 = 0, pidTerm2 = 0, pidTerm_scaled2 = 0;
 
 
 void setup() {
+  // HC-SR04 initialization
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
 
+  // NeoPixel initialization
   pixels.begin();
+ 
+  // Serial initialization for debugging
   Serial.begin(9600);
 }
 
@@ -55,6 +58,8 @@ void loop() {
   dist = hcsr04Read();
   Serial.print("LOOP\tdist: ");
   Serial.println(dist);
+
+  // Next action regarding detection distance
   if (dist > 50){
     forwardMove(400);
   }else if(dist > 30){
@@ -130,10 +135,10 @@ void PIDcalculation(float setpoint1, float setpoint2){
   if (deltaT <= 0) return;
   prevT = currentT;
 
-  // Odczyt pozycji enkoderów
+  // Encoders read
   long* pos = encoders.getPosition();
 
-  // Obliczenie prędkości (impulsy na sekundę)
+  // Velocity calculation (pulses/second)
   speed1 = -(pos[0] - prevPos[0]) / deltaT;
   speed2 = -(pos[1] - prevPos[1]) / deltaT;
 
@@ -154,8 +159,10 @@ void PIDcalculation(float setpoint1, float setpoint2){
 
   last_error1 = error1;
   last_error2 = error2;
-
+  
+  // Motor controll
   motor1.setSpeed(int(pidTerm1));
   motor2.setSpeed(int(pidTerm2));
-  Serial.println("M1\t" + String(int(pidTerm1)) + "\tM2\t" + String(int(pidTerm2)));
+  
+ Serial.println("M1\t" + String(int(pidTerm1)) + "\tM2\t" + String(int(pidTerm2)));
 }
