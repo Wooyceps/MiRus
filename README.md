@@ -81,7 +81,7 @@
 
 ## License
 
-<p>This project is under [XYZ License](License)</p>
+<p>This project is under [MIT License](License)</p>
 
 ---
 
