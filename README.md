@@ -1,6 +1,6 @@
 # MiRuś
 
-<p><b>MiRuś</b> is an Arduino UNO based mobile robot project designed only for entertainment purposes only (so far). It's outer shell design is based on Mobile Industrial Robots' <i>MiR200</i>, however it is scaled down by over a half MiR's size. It is not designed to carry any load neither to perform any tasks or missions.</p>
+<p><b>MiRuś</b> is an Arduino UNO based mobile robot project designed only for entertainment purposes only (so far). It's outer shell 3D printed design is based on Mobile Industrial Robots' <i>MiR200</i>, however it is scaled down by over a half MiR's size. It is not designed to carry any load neither to perform any tasks or missions.</p>
 
 <p align="center">
   <img src="image-url-here" alt="image" width="400"/>
@@ -35,38 +35,29 @@
 
 <p>To make sure the robot drives in a straight line the robot drives by simplified version of PID regulator</p>
 
+### LED state indication
+
+<p>Depending on the action robot is performing, LED strip lights up colors according to actual MiR200 robot.</p>
+
 ---
 
 ## Hardware
 
-- Programmable unit
-- Sensors
-- Actuators
-- Drivers
-- Power supply
+- Arduino UNO Rev 3
+- HC-SR04 (40cm range)
+- DFROBOT 6V DC motors with encoders
+- Cytron MDD3A dual motor driver
+- WS2812B addressable LED strip (~90cm)
+- 5V step down module
 
 ---
 
 ## Libraries
 
-- Library 1
-- Library 2
-
----
-
-## Program logic
-
-<p>Most important code fragments explanation</p>
-
-```cpp
-code fragment 1
-```
-<p>Code explanation</p>
-
-```python
-code fragment 1
-```
-<p>Code explanation</p>
+- EncoderClass.h - contains EncoderClass with efficient data acquisition from two incremental encoders
+- Adafruit_NeoPixel.h
+- CytronMotorDriver.h
+- avr/power.h
 
 ---
 
@@ -81,9 +72,10 @@ code fragment 1
 
 ## Usage
 
-- How to run
-- What to expect
-- Monitor serial port information
+- Upload the code through Arduino IDE
+- Assemble the robot
+- Turn on the robot
+- Monitor serial port information if needed
 
 ---
 
