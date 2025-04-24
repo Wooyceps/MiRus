@@ -3,7 +3,7 @@
 <p><b>MiRuś</b> is an Arduino UNO based mobile robot project designed only for entertainment purposes only (so far). It's outer shell 3D printed design is based on Mobile Industrial Robots' <i>MiR200</i>, however it is scaled down by over a half MiR's size. It is not designed to carry any load neither to perform any tasks or missions.</p>
 
 <p align="center">
-  <img src="image-url-here" alt="image" width="400"/>
+  <img src="MiRus.jpg" alt="MiRus Mobile Robot" width="400"/>
 </p>
 
 ---
